@@ -44,5 +44,48 @@ def get_messages(db:Session, conversation_id, user_id):
         .order_by(models.Message.id)
         .all()
     )
+def get_quizzes(db:Session, user_id):
+    return (
+        db.query(models.Quizz).filter(
+            models.Quizz.user_id == user_id
+        )
+        .order_by(models.Quizz.id)
+        .all()
+    )
+def add_quizz(db:Session, user_id, subject, number_questions, number_options, answer, model, tokens_used):
+    quizz = models.Quizz(
+        user_id=user_id,
+        subject=subject,
+        number_questions=number_questions,
+        number_options=number_options,
+        answer=answer,
+        model=model,
+        tokens_used=tokens_used
+    )
+    db.add(quizz)
+    db.commit()
+    db.refresh(quizz)
+    return quizz.id
+def get_flashcards(db:Session, user_id):
+    return (
+        db.query(models.FlashCard).filter(
+            models.FlashCard.user_id == user_id
+        )
+        .order_by(models.FlashCard.id)
+        .all()
+    )
+def add_flashcard(db:Session, user_id, topic, answer, model, tokens_used):
+    flashcard = models.FlashCard(
+        user_id=user_id,
+        topic=topic,
+        answer=answer,
+        model=model,
+        tokens_used=tokens_used
+    )
+    db.add(flashcard)
+    db.commit()
+    db.refresh(flashcard)
+    return flashcard.id
 if __name__ == "__main__":
+
     print(add_user(SessionLocal(),"ex@example.com","123456"))
